@@ -3,7 +3,7 @@ version: '3'
 services:
   app:
     build: .
-    entrypoint: wait-for db:3306 kafka:9092 -t 100 -- sh -c "npm install && npm run start:dev"
+    entrypoint: wait-for db:3306 -t 100 -- sh -c "npm install && npm run start:dev"
     ports:
       - "3000:3000"
     volumes:

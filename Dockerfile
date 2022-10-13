@@ -1,4 +1,4 @@
-FROM node:14.15.4-alpine3.12
+FROM node:18.10.0-alpine3.15
 
 RUN apk add --no-cache bash curl && \
 	curl https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for --output /usr/bin/wait-for && \

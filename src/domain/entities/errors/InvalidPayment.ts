@@ -1,4 +1,4 @@
-import { DomainError } from 'src/domain/entities/payment/errors/DomainError';
+import { DomainError } from './DomainError';
 
 export class InvalidPaymentError extends Error implements DomainError {
   constructor(name: number) {

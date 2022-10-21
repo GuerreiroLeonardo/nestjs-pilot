@@ -1,5 +1,5 @@
-import { PaymentDTO } from 'src/domain/dto/PaymentDTO';
-import { InvalidPaymentError } from 'src/domain/entities/payment/errors/InvalidPayment';
+import { InvalidPaymentError } from 'src/domain/entities/errors/InvalidPayment';
+import { Payment } from 'src/domain/entities/payment/Payment';
 import { Either } from './../../shared/either';
 
-export type ProcessPaymentResponse = Either<InvalidPaymentError, PaymentDTO>;
+export type ProcessPaymentResponse = Either<InvalidPaymentError, Payment>;

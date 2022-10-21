@@ -1,15 +1,11 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { KafkaMessage } from '@nestjs/microservices/external/kafka.interface';
 import { Payment, PaymentStatus } from 'src/domain/entities/payment/Payment';
+import { Either, left, right } from 'src/shared/either';
 import { ChangePaymentStatus } from 'src/usecases/ChangePaymentStatus/ChangePaymentStatus';
 import { CreatePayment } from 'src/usecases/CreatePayment/CreatePayment';
-// import { MessagePattern, Payload } from '@nestjs/microservices';
-// import { KafkaMessage } from 'kafkajs';
-// import { Payment } from 'src/domain/entities/payment/Payment';
-// import { InvalidPaymentError } from 'src/domain/entities/payment/errors/InvalidPayment';
-// import { Either } from 'src/shared/either';
-// import { IPaymentRepository } from 'src/usecases/interfaces/IPaymentRepository';
 import { ProcessPaymentResponse } from 'src/usecases/types/ProcessPaymentResponse';
-// import { PaymentRepository } from '../repositories/mongodb/PaymentRepository';
 
 @Controller('payments')
 export class PaymentsController {
@@ -17,33 +13,34 @@ export class PaymentsController {
     private createPayment: CreatePayment,
     private changePaymentStatus: ChangePaymentStatus,
   ) {}
-  //   @MessagePattern('pagamentos')
-  //   processPayment(
-  //     @Payload() message: KafkaMessage,
-  //   ): Either<InvalidPaymentError, boolean> {
-  //     const payment: paymentDTO = ProcessPayment.creatPayment(message);
-  //     return true;
-  //   }
+  @MessagePattern('pagamentos')
+  processPayment(@Payload() message: KafkaMessage): void {
+    console.log(`TESSSSSSTEEEEEEEEEE ${JSON.stringify(message)}`);
+    // const payment = new Payment(message.value as any);
+    // console.log(message.value);
+    // await this.createPayment.creatPayment(payment);
+  }
 
   //   @Post()
   //   async create(@Body() creatPayment: CreatPaymentDTO) {}
 
   @Post()
-  async create(@Body() paymentDTO: Payment): Promise<string> {
+  async create(@Body() paymentDTO: Payment): Promise<Either<string, Payment>> {
     const payment: ProcessPaymentResponse =
       await this.createPayment.creatPayment(paymentDTO);
-    console.log(payment);
-    return 'This action adds a new cat';
+    if (payment.isLeft()) {
+      return left(payment.value.message);
+    }
+    return right(payment.value);
   }
 
   @Post('approve/:id')
   async get(@Param('id') id: string): Promise<string> {
-    const payment: void = await this.changePaymentStatus.changeStatus(
+    const payment: Payment = await this.changePaymentStatus.changeStatus(
       id,
       PaymentStatus.Confirmed,
     );
-    console.log(payment);
-    return 'This action adds a new cat';
+    return `Pagamento ${payment.id} aprovado com sucesso!`;
   }
 
   //   @Get()

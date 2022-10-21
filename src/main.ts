@@ -12,15 +12,15 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-  //   app.connectMicroservice<MicroserviceOptions>({
-  //     transport: Transport.KAFKA,
-  //     options: {
-  //       client: {
-  //         brokers: ['kafka:9092'],
-  //       },
-  //     },
-  //   });
-  //   await app.startAllMicroservices();
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: ['kafka:9092'],
+      },
+    },
+  });
+  await app.startAllMicroservices();
   await app.listen(3000, '0.0.0.0');
 }
 bootstrap();

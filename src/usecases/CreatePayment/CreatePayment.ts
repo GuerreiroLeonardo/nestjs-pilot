@@ -1,8 +1,9 @@
 import { Payment } from 'src/domain/entities/payment/Payment';
-import { right } from 'src/shared/either';
+import { left, right } from 'src/shared/either';
 import { ProcessPaymentResponse } from '../types/ProcessPaymentResponse';
 import { Inject } from '@nestjs/common';
 import { IPaymentRepository } from 'src/adapters/repositories/interfaces/IPaymentRepository';
+import { InvalidPaymentError } from 'src/domain/entities/errors/InvalidPayment';
 
 export class CreatePayment {
   payment: Payment;
@@ -12,6 +13,10 @@ export class CreatePayment {
   ) {}
 
   async creatPayment(entity: Payment): Promise<ProcessPaymentResponse> {
+    if (entity.amount <= 0.0) {
+      return left(new InvalidPaymentError('amount', entity.amount));
+    }
+
     const payment = new Payment({
       amount: entity.amount,
       provider: entity.provider,
@@ -20,8 +25,8 @@ export class CreatePayment {
       createdAt: new Date(),
     });
 
-    await this._repository.create(payment);
+    const result = await this._repository.create(payment);
 
-    return right(payment);
+    return right(result);
   }
 }

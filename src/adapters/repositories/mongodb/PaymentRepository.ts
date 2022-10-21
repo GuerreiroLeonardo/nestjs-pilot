@@ -25,8 +25,7 @@ export class PaymentRepository implements IPaymentRepository {
       filterQuery,
       updateData,
     );
-    console.log(result);
-    return;
+    return result;
   }
   //   async findById(id: string): Promise<Payment> {
   //     // const result = await this.paymentModel.find({ _id: id }).exec();

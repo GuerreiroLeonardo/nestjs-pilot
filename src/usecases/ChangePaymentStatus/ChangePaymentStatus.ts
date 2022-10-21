@@ -9,10 +9,9 @@ export class ChangePaymentStatus {
     private readonly _repository: IPaymentRepository,
   ) {}
 
-  async changeStatus(id: string, status: PaymentStatus): Promise<void> {
+  async changeStatus(id: string, status: PaymentStatus): Promise<Payment> {
     const data = { status: status };
     const result = await this._repository.update(id, data);
-    console.log(result);
-    return;
+    return result;
   }
 }

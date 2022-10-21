@@ -4,7 +4,7 @@ import { ProcessPaymentResponse } from '../types/ProcessPaymentResponse';
 import { Inject } from '@nestjs/common';
 import { IPaymentRepository } from 'src/adapters/repositories/interfaces/IPaymentRepository';
 
-export class ProcessPayment {
+export class CreatePayment {
   payment: Payment;
   constructor(
     @Inject('IPaymentRepository')

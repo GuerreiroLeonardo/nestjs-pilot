@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { Payment } from 'src/domain/entities/payment/Payment';
-import { ProcessPayment } from 'src/usecases/process-payment/CreatePayment';
+import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Payment, PaymentStatus } from 'src/domain/entities/payment/Payment';
+import { ChangePaymentStatus } from 'src/usecases/ChangePaymentStatus/ChangePaymentStatus';
+import { CreatePayment } from 'src/usecases/CreatePayment/CreatePayment';
 // import { MessagePattern, Payload } from '@nestjs/microservices';
 // import { KafkaMessage } from 'kafkajs';
 // import { Payment } from 'src/domain/entities/payment/Payment';
@@ -12,7 +13,10 @@ import { ProcessPaymentResponse } from 'src/usecases/types/ProcessPaymentRespons
 
 @Controller('payments')
 export class PaymentsController {
-  constructor(private processPayment: ProcessPayment) {}
+  constructor(
+    private createPayment: CreatePayment,
+    private changePaymentStatus: ChangePaymentStatus,
+  ) {}
   //   @MessagePattern('pagamentos')
   //   processPayment(
   //     @Payload() message: KafkaMessage,
@@ -27,20 +31,20 @@ export class PaymentsController {
   @Post()
   async create(@Body() paymentDTO: Payment): Promise<string> {
     const payment: ProcessPaymentResponse =
-      await this.processPayment.creatPayment(paymentDTO);
+      await this.createPayment.creatPayment(paymentDTO);
     console.log(payment);
     return 'This action adds a new cat';
   }
 
-  //   @Get('approve/:id')
-  //   async get(@Param('id') id: string): Promise<string> {
-  //     const payment: void = await this.processPayment.changPaymentStatus(
-  //       id,
-  //       PaymentStatus.Confirmed,
-  //     );
-  //     console.log(payment);
-  //     return 'This action adds a new cat';
-  //   }
+  @Post('approve/:id')
+  async get(@Param('id') id: string): Promise<string> {
+    const payment: void = await this.changePaymentStatus.changeStatus(
+      id,
+      PaymentStatus.Confirmed,
+    );
+    console.log(payment);
+    return 'This action adds a new cat';
+  }
 
   //   @Get()
   //   test(): string {

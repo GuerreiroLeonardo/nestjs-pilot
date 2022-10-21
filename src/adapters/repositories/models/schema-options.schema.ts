@@ -6,4 +6,5 @@ export const DefaultSchemaOptions: SchemaOptions = {
     getters: true,
     virtuals: true,
   },
+  collection: 'payments',
 };
